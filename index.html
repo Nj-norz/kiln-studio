@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kiln Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A studio of simple apps for busy business owners.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one narrow column; the hero pairs the wordmark with a firing curve that shows where each app is in the studio's process. */
+:root{
+  --bg:#eef0ec;        /* unglazed porcelain, cool */
+  --surface:#f8f9f6;
+  --ink:#1b2422;       /* iron-oxide black */
+  --muted:#5d6a66;
+  --line:#cdd4cf;
+  --glaze:#2f6b5e;     /* celadon glaze */
+  --glaze-soft:#d7e6e0;
+  --heat:#d2591f;      /* kiln glow, used only on the curve */
+  --display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body:"Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141a19; --surface:#1c2422; --ink:#e7ece9; --muted:#9aa8a3; --line:#2f3a37;
+    --glaze:#7fc0ad; --glaze-soft:#22332f; --heat:#f0884f; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141a19; --surface:#1c2422; --ink:#e7ece9; --muted:#9aa8a3; --line:#2f3a37;
+  --glaze:#7fc0ad; --glaze-soft:#22332f; --heat:#f0884f; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.wrap{max-width:60rem;margin:0 auto}
+a{color:var(--glaze)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--glaze);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05}
+p{margin:0}
+.label{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* nav */
+nav{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding-block:1.25rem;border-bottom:1px solid var(--line)}
+.mark{font-family:var(--display);font-weight:800;font-size:1.25rem;text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:.5rem}
+.mark svg{width:22px;height:22px}
+nav ul{list-style:none;display:flex;gap:1.25rem;margin:0;padding:0;font-size:.9375rem}
+nav ul a{color:var(--muted);text-decoration:none}
+nav ul a:hover{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:2.5rem;align-items:end;padding-block:4rem 3.5rem}
+.hero > *{min-width:0}
+.hero h1{font-size:clamp(3.5rem, 11vw, 7.5rem);font-weight:800;letter-spacing:-.04em}
+.hero h1 span{color:var(--glaze)}
+.hero .lede{font-size:1.3rem;max-width:26ch;margin-top:1.25rem;color:var(--ink)}
+.hero .sub{color:var(--muted);max-width:40ch;margin-top:.75rem}
+.cta{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.75rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.1rem;border-radius:999px;font-weight:600;font-size:.9375rem;text-decoration:none;border:1px solid var(--ink)}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn.ghost{color:var(--ink)}
+.btn.primary:hover{background:var(--glaze);border-color:var(--glaze)}
+.btn.ghost:hover{border-color:var(--glaze);color:var(--glaze)}
+
+.curve{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem 1rem .75rem}
+.curve svg{width:100%;height:auto;display:block}
+.curve .cap{display:flex;justify-content:space-between;gap:1rem;margin-bottom:.5rem}
+.c-grid{stroke:var(--line);stroke-width:1}
+.c-line{fill:none;stroke:var(--heat);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.c-area{fill:var(--heat);opacity:.08}
+.c-tick{fill:var(--muted);font-family:var(--mono);font-size:9px}
+.c-stage{fill:var(--ink);font-family:var(--body);font-size:11px;font-weight:600}
+.c-dot{fill:var(--glaze);stroke:var(--surface);stroke-width:3}
+.c-app{fill:var(--glaze);font-family:var(--mono);font-size:10px;font-weight:500}
+@media (prefers-reduced-motion: no-preference){
+  .c-line{stroke-dasharray:700;stroke-dashoffset:0;animation:fire 1.6s ease-out}
+  @keyframes fire{from{stroke-dashoffset:700}to{stroke-dashoffset:0}}
+}
+
+/* sections */
+section{padding-block:3.5rem;border-top:1px solid var(--line)}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.5rem 2rem;margin-bottom:2rem}
+.sec-head h2{font-size:clamp(2rem, 5vw, 2.75rem);font-weight:700;letter-spacing:-.02em}
+.sec-head p{color:var(--muted);max-width:38ch}
+
+.apps{display:grid;grid-template-columns:repeat(3, 1fr);gap:1rem}
+.app{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.5rem;display:flex;flex-direction:column;gap:.9rem;min-width:0}
+.app.lead{border-color:var(--glaze);box-shadow:0 0 0 1px var(--glaze) inset}
+.status{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;padding:.25rem .6rem;border-radius:999px;background:var(--glaze-soft);color:var(--glaze);align-self:flex-start}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.status.quiet{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.app h3{font-size:1.75rem;font-weight:700;letter-spacing:-.02em}
+.app h3 small{display:block;font-family:var(--mono);font-size:.75rem;font-weight:400;letter-spacing:.04em;color:var(--muted);margin-top:.35rem}
+.app p{color:var(--muted);font-size:.975rem}
+.app ul{margin:0;padding-left:1.1rem;font-size:.9375rem;display:grid;gap:.3rem}
+.app .foot{margin-top:auto;padding-top:.5rem;font-size:.9375rem}
+.app .foot a{font-weight:600;text-decoration:none}
+.app .foot a:hover{text-decoration:underline}
+
+.principles{display:grid;grid-template-columns:repeat(3, 1fr);gap:2rem}
+.principles > div{display:grid;gap:.5rem;min-width:0}
+.principles h3{font-size:1.25rem;font-weight:700}
+.principles p{color:var(--muted);font-size:.975rem}
+
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.25rem 1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;min-width:0}
+.row > div{min-width:0}
+.row .val{font-family:var(--mono);font-size:1rem;word-break:break-all;margin-top:.25rem;user-select:all}
+.copy{font:inherit;font-size:.875rem;font-weight:600;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:.45rem .9rem;cursor:pointer}
+.copy:hover{border-color:var(--glaze);color:var(--glaze)}
+
+footer{border-top:1px solid var(--line);padding-block:2rem 2.5rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;color:var(--muted);font-size:.875rem}
+footer strong{font-family:var(--display);color:var(--ink);font-weight:700}
+
+@media (max-width: 760px){
+  .hero{grid-template-columns:1fr;padding-block:2.5rem;gap:2rem}
+  .apps,.principles,.contact{grid-template-columns:1fr}
+  nav ul{gap:.9rem}
+  nav ul li.hide-sm{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav aria-label="Main">
+    <a class="mark" href="#top">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21h14M7 21V9a5 5 0 0 1 10 0v12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M10 21v-5a2 2 0 0 1 4 0v5" fill="var(--heat)"/></svg>
+      Kiln
+    </a>
+    <ul>
+      <li><a href="#apps">Apps</a></li>
+      <li class="hide-sm"><a href="#how">How we work</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero" id="top">
+    <div>
+      <p class="label">Kiln Studio</p>
+      <h1>Kiln<span>.</span></h1>
+      <p class="lede">A studio of simple apps for busy business owners.</p>
+      <p class="sub">Small, focused tools that take one annoying job off your plate, so you can get back to the work that pays.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://tally.so/r/Z98r8v" target="_blank" rel="noopener">Join the Dealfolio waitlist</a>
+        <a class="btn ghost" href="https://instagram.com/madebykiln.studio" target="_blank" rel="noopener">Follow the studio</a>
+      </div>
+    </div>
+
+    <figure class="curve" aria-label="Firing curve showing where each Kiln app is in the studio's process">
+      <div class="cap"><span class="label">Firing schedule</span><span class="label">Nov 2026</span></div>
+      <svg viewBox="0 0 360 210" role="img">
+        <title>Dealfolio is at the prototype stage and testing with creators. Chairside is paused at the idea stage.</title>
+        <line class="c-grid" x1="20" y1="170" x2="345" y2="170"/>
+        <line class="c-grid" x1="20" y1="120" x2="345" y2="120" stroke-dasharray="2 4"/>
+        <line class="c-grid" x1="20" y1="70"  x2="345" y2="70"  stroke-dasharray="2 4"/>
+        <text class="c-tick" x="20" y="64">1240°C · cone 6</text>
+        <text class="c-tick" x="20" y="114">1000°C · bisque</text>
+        <path class="c-area" d="M28 170 C 70 168, 90 140, 110 120 S 170 96, 190 70 L 270 70 C 300 70, 320 140, 340 170 Z"/>
+        <path class="c-line" d="M28 170 C 70 168, 90 140, 110 120 S 170 96, 190 70 L 270 70 C 300 70, 320 140, 340 170"/>
+        <text class="c-stage" x="28"  y="192">Idea</text>
+        <text class="c-stage" x="90"  y="192">Prototype</text>
+        <text class="c-stage" x="196" y="192">Testing</text>
+        <text class="c-stage" x="296" y="192">Launch</text>
+        <circle class="c-dot" cx="44" cy="168" r="6"/>
+        <text class="c-app" x="30" y="152">Chairside · paused</text>
+        <circle class="c-dot" cx="118" cy="114" r="6"/>
+        <text class="c-app" x="104" y="98">Dealfolio</text>
+      </svg>
+    </figure>
+  </header>
+
+  <section id="apps">
+    <div class="sec-head">
+      <h2>The apps</h2>
+      <p>One studio, a growing shelf. Each app does one job well.</p>
+    </div>
+    <div class="apps">
+      <article class="app lead" id="dealfolio">
+        <span class="status">Early access · waitlist open</span>
+        <h3>Dealfolio<small>by Kiln · for creators</small></h3>
+        <p>For creators juggling several paid brand deals at once. Stay on top of the work, and make sure every brand pays you.</p>
+        <ul>
+          <li>What you need to deliver, deal by deal</li>
+          <li>What's due next, across every deal</li>
+          <li>Which brands still owe you, and who's overdue</li>
+        </ul>
+        <p class="foot"><a href="https://tally.so/r/Z98r8v" target="_blank" rel="noopener">Join the waitlist →</a></p>
+      </article>
+
+      <article class="app">
+        <span class="status quiet">Paused</span>
+        <h3>Chairside<small>by Kiln · for beauty pros</small></h3>
+        <p>Bookings, orders and payments in one place for stylists, nail techs and hair vendors. Clients pay you directly. Chairside keeps track.</p>
+        <ul>
+          <li>Bookings and orders in one list</li>
+          <li>See who has paid and who hasn't</li>
+          <li>No payment processing to set up</li>
+        </ul>
+        <p class="foot"><a href="#contact">Want to hear when it's back? Get in touch →</a></p>
+      </article>
+
+      <article class="app">
+        <span class="status quiet">On the shelf</span>
+        <h3>What's next<small>tools for service businesses</small></h3>
+        <p>Ideas on the shelf for bookkeepers, consultants, nonprofits and service businesses. If one task eats your week, tell us about it.</p>
+        <p class="foot"><a href="#contact">Suggest a problem →</a></p>
+      </article>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="sec-head">
+      <h2>How we work</h2>
+      <p>Like a kiln: patient heat, then something that lasts.</p>
+    </div>
+    <div class="principles">
+      <div>
+        <p class="label">Simple</p>
+        <h3>One job, done properly</h3>
+        <p>No bloated dashboards. Each app solves a single problem and stays out of your way.</p>
+      </div>
+      <div>
+        <p class="label">Tested</p>
+        <h3>Built with real owners</h3>
+        <p>We test every idea with the people who'll use it before we build it out.</p>
+      </div>
+      <div>
+        <p class="label">Anywhere</p>
+        <h3>Made for busy days</h3>
+        <p>Works on your phone, between clients, wherever your business happens.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="sec-head">
+      <h2>Say hello</h2>
+      <p>Questions, early access, or a problem you want solved.</p>
+    </div>
+    <div class="contact">
+      <div class="row">
+        <div><p class="label">Email</p><p class="val" id="email">madebykilnstudio@gmail.com</p></div>
+        <button class="copy" type="button" data-copy="email">Copy</button>
+      </div>
+      <div class="row">
+        <div><p class="label">Instagram</p><p class="val"><a href="https://instagram.com/madebykiln.studio" target="_blank" rel="noopener">@madebykiln.studio</a></p></div>
+        <a class="copy" href="https://instagram.com/madebykiln.studio" target="_blank" rel="noopener" style="text-decoration:none">Follow</a>
+      </div>
+      <div class="row">
+        <div><p class="label">TikTok</p><p class="val"><a href="https://www.tiktok.com/@madebykiln.studio" target="_blank" rel="noopener">@madebykiln.studio</a></p></div>
+        <a class="copy" href="https://www.tiktok.com/@madebykiln.studio" target="_blank" rel="noopener" style="text-decoration:none">Follow</a>
+      </div>
+      <div class="row">
+        <div><p class="label">Facebook</p><p class="val"><a href="https://www.facebook.com/share/17oU8w3Ff2/" target="_blank" rel="noopener">Kiln Studio</a></p></div>
+        <a class="copy" href="https://www.facebook.com/share/17oU8w3Ff2/" target="_blank" rel="noopener" style="text-decoration:none">Follow</a>
+      </div>
+      <div class="row">
+        <div><p class="label">Dealfolio on Instagram</p><p class="val"><a href="https://instagram.com/dealfolio.bykiln" target="_blank" rel="noopener">@dealfolio.bykiln</a></p></div>
+        <a class="copy" href="https://instagram.com/dealfolio.bykiln" target="_blank" rel="noopener" style="text-decoration:none">Follow</a>
+      </div>
+      <div class="row">
+        <div><p class="label">Dealfolio waitlist</p><p class="val"><a href="https://tally.so/r/Z98r8v" target="_blank" rel="noopener">tally.so/r/Z98r8v</a></p></div>
+        <a class="copy" href="https://tally.so/r/Z98r8v" target="_blank" rel="noopener" style="text-decoration:none">Join</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span><strong>Made by Kiln Studio</strong></span>
+    <span>© 2026 Kiln Studio</span>
+  </footer>
+</div>
+
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var el = document.getElementById(btn.dataset.copy);
+    var text = el.textContent.trim();
+    var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1800); };
+    var fallback = function(){
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Selected';
+    };
+    try {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } catch(e){ fallback(); }
+  });
+});
+</script>
+</body>
+</html>
